@@ -51,7 +51,9 @@ proptest! {
         let history: Vec<Candle> = bars
             .iter()
             .enumerate()
-            .map(|(i, &(o, c, s, v))| candle(1_700_000_000 + i as i64 * 3600, o, c, s, v))
+            .map(|(i, &(o, c, s, v))| {
+                candle(1_700_000_000 + i64::try_from(i).unwrap() * 3600, o, c, s, v)
+            })
             .collect();
         let spec = FingerprintSpec::from_json(&spec_json(&fields, window, metric, norm)).unwrap();
 
