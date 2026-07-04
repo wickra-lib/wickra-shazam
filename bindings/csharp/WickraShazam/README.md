@@ -1,6 +1,6 @@
-# Wickra Shazam — .NET
+# Wickra Shazam — C&#35;
 
-.NET bindings for the `wickra-shazam` data-driven core over its C ABI hub
+C# bindings for the `wickra-shazam` data-driven core over its C ABI hub
 (`[LibraryImport]`). Build a `Shazam` from a spec JSON, drive it with command
 JSON, read back match reports — the same protocol as every other binding.
 
