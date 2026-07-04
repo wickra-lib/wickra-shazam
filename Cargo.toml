@@ -14,7 +14,7 @@
 
 [workspace]
 resolver = "2"
-members = ["crates/shazam-core", "crates/shazam-cli", "bindings/c", "bindings/python", "bindings/node", "bindings/wasm", "crates/shazam-bench"]
+members = ["crates/shazam-core", "crates/shazam-cli", "bindings/c", "bindings/python", "bindings/node", "bindings/wasm", "crates/shazam-bench", "examples/rust"]
 # The fuzz crate is its own (detached) workspace — cargo-fuzz builds it on a
 # nightly toolchain with sanitizer flags.
 exclude = ["fuzz"]
