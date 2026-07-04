@@ -125,16 +125,6 @@ impl FeatureSet {
         }
         Some(row)
     }
-
-    /// The largest warmup period across all resolved indicators (0 if the spec
-    /// is price-only).
-    pub(crate) fn max_warmup(&self) -> usize {
-        self.indicators
-            .iter()
-            .map(|e| e.indicator.warmup())
-            .max()
-            .unwrap_or(0)
-    }
 }
 
 /// Read a price field from a candle.
@@ -196,7 +186,6 @@ mod tests {
             },
         ]))
         .unwrap();
-        assert_eq!(set.max_warmup(), 0);
         assert_eq!(set.row(), None);
         set.update(&candle(42.0));
         assert_eq!(set.row(), Some(vec![42.0, 10.0]));
@@ -215,7 +204,6 @@ mod tests {
             },
         ]))
         .unwrap();
-        assert!(set.max_warmup() > 0);
         set.update(&candle(1.0));
         assert_eq!(set.row(), None); // Sma not warmed up yet
         set.update(&candle(2.0));
