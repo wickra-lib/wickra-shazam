@@ -43,4 +43,53 @@ stopifnot(inherits(try(wkshzm_new("not json"), silent = TRUE), "try-error"))
 inband <- wkshzm_command(shazam, '{"cmd":"nope"}')
 stopifnot(grepl('"ok":false', inband, fixed = TRUE))
 
+## cross-language golden parity: index sym-01's history, match its current
+## window with k=5, and assert the response is byte-identical to
+## golden/expected/<spec>.json. Candle JSON is built from the raw CSV tokens so
+## no per-language number formatting can drift.
+golden_dir <- function() {
+  d <- normalizePath(getwd(), mustWork = FALSE)
+  for (i in seq_len(8)) {
+    g <- file.path(d, "golden")
+    if (dir.exists(file.path(g, "specs"))) {
+      return(g)
+    }
+    d <- dirname(d)
+  }
+  NULL
+}
+
+candles_json <- function(path) {
+  rows <- c()
+  for (line in readLines(path, warn = FALSE)) {
+    line <- trimws(line)
+    if (!nzchar(line)) next
+    cc <- strsplit(line, ",")[[1]]
+    if (is.na(suppressWarnings(as.integer(cc[1])))) next
+    rows <- c(rows, sprintf(
+      '{"time":%s,"open":%s,"high":%s,"low":%s,"close":%s,"volume":%s}',
+      cc[1], cc[2], cc[3], cc[4], cc[5], cc[6]
+    ))
+  }
+  paste0("[", paste(rows, collapse = ","), "]")
+}
+
+g <- golden_dir()
+if (!is.null(g)) {
+  history <- candles_json(file.path(g, "data/history/sym-01.csv"))
+  current <- candles_json(file.path(g, "data/current/sym-01.csv"))
+  for (spec_path in list.files(file.path(g, "specs"), pattern = "\\.json$", full.names = TRUE)) {
+    name <- basename(spec_path)
+    spec_json <- paste(readLines(spec_path, warn = FALSE), collapse = "\n")
+    expected <- trimws(paste(
+      readLines(file.path(g, "expected", name), warn = FALSE), collapse = "\n"
+    ))
+    gsh <- wkshzm_new(spec_json)
+    wkshzm_command(gsh, paste0('{"cmd":"index","history":', history, "}"))
+    got <- wkshzm_command(gsh, paste0('{"cmd":"match","current":', current, ',"k":5}'))
+    stopifnot(identical(trimws(got), expected))
+  }
+  cat("wickra-shazam golden parity passed\n")
+}
+
 cat("wickra-shazam R tests passed\n")
