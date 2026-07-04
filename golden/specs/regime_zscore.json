@@ -1,0 +1,12 @@
+{
+  "features": [
+    { "kind": "indicator", "name": "Rsi", "params": [14] },
+    { "kind": "indicator", "name": "Sma", "params": [20] },
+    { "kind": "indicator", "name": "Atr", "params": [14] },
+    { "kind": "price", "field": "close" },
+    { "kind": "price", "field": "volume" }
+  ],
+  "window": 1,
+  "normalize": "z_score",
+  "metric": "cosine"
+}

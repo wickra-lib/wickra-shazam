@@ -1,0 +1,9 @@
+{
+  "features": [
+    { "kind": "microstructure", "name": "Obv", "params": [] },
+    { "kind": "microstructure", "name": "Mfi", "params": [14] },
+    { "kind": "microstructure", "name": "ForceIndex", "params": [14] }
+  ],
+  "window": 8,
+  "metric": "dtw"
+}

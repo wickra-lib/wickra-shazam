@@ -1,0 +1,8 @@
+{
+  "features": [
+    { "kind": "price", "field": "close" }
+  ],
+  "window": 5,
+  "normalize": "none",
+  "metric": "euclid"
+}
