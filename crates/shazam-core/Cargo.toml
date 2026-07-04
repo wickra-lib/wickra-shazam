@@ -1,0 +1,48 @@
+[package]
+name = "shazam-core"
+description = "Data-driven core of Wickra Shazam: a serde FingerprintSpec rolled over an asset's history into an index of fixed-dimension microstructure fingerprints, matched against the whole history."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
+
+[lints]
+workspace = true
+
+[features]
+# `parallel` computes match distances concurrently with rayon; it is on by
+# default. The wasm binding builds with --no-default-features for a sequential
+# match that is byte-identical to the parallel one. `live` pulls the exchange
+# facade to source the current fingerprint from a live feed (native-only).
+default = ["parallel"]
+parallel = ["dep:rayon"]
+live = ["dep:wickra-exchange"]
+
+[dependencies]
+# Streaming indicators (514 O(1) indicators) resolved by name + params via the
+# backtester's registry factory (the only name -> indicator resolver); it pulls
+# in wickra-core transitively.
+wickra-backtest-core.workspace = true
+wickra-core.workspace = true
+# Candle + CSV loading for the history data.
+wickra-data.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+toml.workspace = true
+rust_decimal.workspace = true
+thiserror.workspace = true
+# Data-parallel match distances; optional (the `parallel` feature).
+rayon = { workspace = true, optional = true }
+# The native exchange facade for a live fingerprint; optional (`live`).
+wickra-exchange = { workspace = true, optional = true }
+
+[dev-dependencies]
+proptest.workspace = true
+serde.workspace = true
+serde_json.workspace = true
