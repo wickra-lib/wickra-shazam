@@ -1,0 +1,66 @@
+{
+  "name": "wickra-shazam",
+  "version": "0.1.0",
+  "description": "The data-driven history-fingerprint match core: build a Shazam from a spec, index an asset's history, match the current fingerprint against it. Node bindings powered by Rust.",
+  "author": "kingchenc <support@wickra.org>",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "license": "MIT OR Apache-2.0",
+  "keywords": [
+    "trading",
+    "fingerprint",
+    "similarity",
+    "pattern-matching",
+    "finance",
+    "rust"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wickra-lib/wickra-shazam"
+  },
+  "bugs": {
+    "url": "https://github.com/wickra-lib/wickra-shazam/issues"
+  },
+  "homepage": "https://github.com/wickra-lib/wickra-shazam",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "npm",
+    "*.node"
+  ],
+  "napi": {
+    "name": "wickra-shazam",
+    "triples": {
+      "defaults": false,
+      "additional": [
+        "x86_64-unknown-linux-gnu",
+        "aarch64-unknown-linux-gnu",
+        "x86_64-apple-darwin",
+        "aarch64-apple-darwin",
+        "x86_64-pc-windows-msvc",
+        "aarch64-pc-windows-msvc"
+      ]
+    }
+  },
+  "engines": {
+    "node": ">= 22"
+  },
+  "optionalDependencies": {
+    "wickra-shazam-linux-x64-gnu": "0.1.0",
+    "wickra-shazam-linux-arm64-gnu": "0.1.0",
+    "wickra-shazam-darwin-x64": "0.1.0",
+    "wickra-shazam-darwin-arm64": "0.1.0",
+    "wickra-shazam-win32-x64-msvc": "0.1.0",
+    "wickra-shazam-win32-arm64-msvc": "0.1.0"
+  },
+  "scripts": {
+    "build": "napi build --platform --release",
+    "build:debug": "napi build --platform",
+    "artifacts": "napi artifacts",
+    "version": "napi version",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "^3.7.2"
+  }
+}
