@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "wickra-shazam"
+abstract: >-
+  "Shazam for markets" built on the Wickra core: an asset's full history is
+  folded into a rolling index of fixed-dimension microstructure fingerprints (a
+  data-driven FingerprintSpec over 514 O(1) indicators plus price and
+  microstructure), and the current fingerprint is matched against that entire
+  history to name the regime, exposed as a JSON-over-C-ABI data API in ten
+  languages.
+type: software
+authors:
+  - alias: kingchenc
+    website: "https://wickra.org"
+repository-code: "https://github.com/wickra-lib/wickra-shazam"
+url: "https://wickra.org"
+license:
+  - MIT
+  - Apache-2.0
+keywords:
+  - trading
+  - fingerprint
+  - similarity
+  - pattern-matching
+  - finance
