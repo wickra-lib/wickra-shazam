@@ -1,0 +1,4 @@
+useDynLib(wickrashazam, .registration = TRUE, .fixes = "C_")
+export(wkshzm_version)
+export(wkshzm_new)
+export(wkshzm_command)
