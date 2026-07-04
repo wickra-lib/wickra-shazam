@@ -1,0 +1,10 @@
+{
+  "features": [
+    { "kind": "indicator", "name": "Rsi", "params": [14] },
+    { "kind": "indicator", "name": "Roc", "params": [10] },
+    { "kind": "price", "field": "close" }
+  ],
+  "window": 10,
+  "normalize": "z_score",
+  "metric": "cosine"
+}
