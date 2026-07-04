@@ -143,4 +143,23 @@ mod tests {
         let seq: [&[f64]; 2] = [&r0, &r1];
         assert!(close(dtw_similarity(&seq, &seq, 2), 1.0));
     }
+
+    #[test]
+    fn dtw_band_restricts_warping() {
+        // A band of 0 forces the diagonal alignment; a wide band lets the two
+        // late spikes warp onto each other, giving a smaller distance (higher
+        // similarity). This exercises the Sakoe-Chiba band clamp.
+        let a0 = [0.0];
+        let a1 = [0.0];
+        let a2 = [10.0];
+        let b0 = [0.0];
+        let b1 = [10.0];
+        let b2 = [10.0];
+        let a: [&[f64]; 3] = [&a0, &a1, &a2];
+        let b: [&[f64]; 3] = [&b0, &b1, &b2];
+        let diagonal = dtw_similarity(&a, &b, 0);
+        let warped = dtw_similarity(&a, &b, 3);
+        assert!(warped > diagonal);
+        assert!(diagonal > 0.0 && warped <= 1.0);
+    }
 }
