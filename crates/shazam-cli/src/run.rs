@@ -54,8 +54,7 @@ fn load_spec(path: &Path) -> Result<FingerprintSpec, String> {
 
 /// Read a CSV file of OHLCV candles.
 fn load_csv(path: &Path) -> Result<Vec<Candle>, String> {
-    let content =
-        fs::read_to_string(path).map_err(|e| format!("read {}: {e}", path.display()))?;
+    let content = fs::read_to_string(path).map_err(|e| format!("read {}: {e}", path.display()))?;
     parse_csv(&content)
 }
 
