@@ -9,8 +9,6 @@
 
 use std::collections::VecDeque;
 
-pub use crate::spec::MAX_DIM;
-
 /// One fingerprint: a fixed-length vector anchored to a timestamp. This is an
 /// internal type — it never crosses the JSON language boundary.
 #[derive(Clone, Debug, PartialEq)]
@@ -107,10 +105,5 @@ mod tests {
         buf.push(vec![3.0]); // drops [1.0]
         let fp = buf.emit(0);
         assert_eq!(&*fp.v, &[2.0, 3.0]);
-    }
-
-    #[test]
-    fn max_dim_is_exported() {
-        assert_eq!(MAX_DIM, 4096);
     }
 }
