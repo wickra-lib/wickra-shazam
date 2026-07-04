@@ -1,0 +1,28 @@
+[package]
+name = "wickra-shazam"
+description = "Reference command-line client over shazam-core: load a spec and an asset's history from CSV, index it, match the current fingerprint against the history, and print the matches."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
+
+[lints]
+workspace = true
+
+[[bin]]
+name = "wickra-shazam"
+path = "src/main.rs"
+
+[dependencies]
+# The data-driven fingerprint core.
+shazam-core.workspace = true
+# Candle + CSV loading for the history and current files.
+wickra-data.workspace = true
+serde_json.workspace = true
+clap.workspace = true
