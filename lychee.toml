@@ -20,8 +20,8 @@ exclude = [
     "^https?://localhost",
     "^https?://127\\.0\\.0\\.1",
     "example\\.com",
-    "^https?://crates\\.io/crates/wickra-screener",
-    "^https?://pypi\\.org/project/wickra-screener",
-    "^https?://www\\.npmjs\\.com/package/wickra-screener",
-    "^https?://pkg\\.go\\.dev/github\\.com/wickra-lib/wickra-screener-go",
+    "^https?://crates\\.io/crates/wickra-shazam",
+    "^https?://pypi\\.org/project/wickra-shazam",
+    "^https?://www\\.npmjs\\.com/package/wickra-shazam",
+    "^https?://pkg\\.go\\.dev/github\\.com/wickra-lib/wickra-shazam-go",
 ]
