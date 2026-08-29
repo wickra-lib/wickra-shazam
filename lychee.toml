@@ -22,4 +22,6 @@ exclude = [
     "^https?://pypi\\.org/project/wickra-shazam",
     "^https?://www\\.npmjs\\.com/package/wickra-shazam",
     "^https?://pkg\\.go\\.dev/github\\.com/wickra-lib/wickra-shazam-go",
+    "^https?://www\\.nuget\\.org/packages/Wickra\\.Shazam",
+    "^https?://central\\.sonatype\\.com/artifact/org\\.wickra/wickra-shazam",
 ]
