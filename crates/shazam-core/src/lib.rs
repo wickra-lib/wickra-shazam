@@ -41,7 +41,7 @@ pub use spec::{FingerprintSpec, Metric, Normalize};
 // which the registry features are driven by).
 pub use wickra_backtest_core::Candle;
 
-/// The shazam-core version string.
+/// The wickra-shazam-core version string.
 #[must_use]
 pub fn version() -> &'static str {
     env!("CARGO_PKG_VERSION")

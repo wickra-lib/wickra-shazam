@@ -8,9 +8,9 @@
 //! (`--no-default-features`, the WASM path) build is what pins the two paths to
 //! bit-for-bit agreement. CI runs this test under each feature set.
 
-use shazam_core::{build_index, match_index, Candle, FingerprintSpec};
 use std::fs;
 use std::path::{Path, PathBuf};
+use wickra_shazam_core::{build_index, match_index, Candle, FingerprintSpec};
 
 const K: usize = 5;
 

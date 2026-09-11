@@ -1,5 +1,5 @@
 [package]
-name = "shazam-core"
+name = "wickra-shazam-core"
 description = "Data-driven core of Wickra Shazam: a serde FingerprintSpec rolled over an asset's history into an index of fixed-dimension microstructure fingerprints, matched against the whole history."
 version.workspace = true
 edition.workspace = true

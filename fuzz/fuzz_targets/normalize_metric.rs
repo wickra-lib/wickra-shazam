@@ -5,7 +5,7 @@
 //! never producing `NaN`/`inf` or a panic.
 
 use libfuzzer_sys::fuzz_target;
-use shazam_core::{build_index, match_index, Candle, FingerprintSpec};
+use wickra_shazam_core::{build_index, match_index, Candle, FingerprintSpec};
 
 fuzz_target!(|data: &[u8]| {
     let Ok(text) = std::str::from_utf8(data) else {

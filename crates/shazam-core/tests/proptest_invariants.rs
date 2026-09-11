@@ -4,7 +4,7 @@
 //! identical current-vs-history window yields a perfect self-match.
 
 use proptest::prelude::*;
-use shazam_core::{build_index, match_index, Candle, FingerprintSpec};
+use wickra_shazam_core::{build_index, match_index, Candle, FingerprintSpec};
 
 const FIELDS: [&str; 5] = ["open", "high", "low", "close", "volume"];
 const METRICS: [&str; 3] = ["cosine", "euclid", "dtw"];

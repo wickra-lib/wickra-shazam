@@ -15,5 +15,5 @@ name = "match"
 path = "src/main.rs"
 
 [dependencies]
-shazam-core = { workspace = true }
+wickra-shazam-core = { workspace = true }
 serde_json = { workspace = true }

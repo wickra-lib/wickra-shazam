@@ -16,10 +16,10 @@ workspace = true
 # Toggle the core's parallel path so `cargo bench` (default) measures the rayon
 # match and `cargo bench --no-default-features` measures the sequential one.
 default = ["parallel"]
-parallel = ["shazam-core/parallel"]
+parallel = ["wickra-shazam-core/parallel"]
 
 [dependencies]
-shazam-core = { path = "../shazam-core", version = "0.1.0", default-features = false }
+wickra-shazam-core = { path = "../shazam-core", version = "0.1.0", default-features = false }
 
 [dev-dependencies]
 criterion.workspace = true

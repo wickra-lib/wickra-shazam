@@ -8,7 +8,7 @@ reviewed, CI-green pull requests. Status below is updated as phases complete.
 
 0. **Scaffold** — workspace, governance, supply-chain config, `.github`
    scaffolding. *In progress.*
-1. **`shazam-core`** — the `FingerprintSpec`, the rolling per-bar fingerprint
+1. **`wickra-shazam-core`** — the `FingerprintSpec`, the rolling per-bar fingerprint
    fold, normalization, the distance metrics, the `FingerprintIndex` and
    `match_current`, with near-total coverage via inline tests.
 2. **`shazam-cli`** — the reference `wickra-shazam` binary: load a spec and a

@@ -2,7 +2,7 @@
 
 The top-level [ARCHITECTURE.md](../ARCHITECTURE.md) gives the high-level shape;
 this page covers how the core actually builds an index and finds matches. The
-whole product is **one data-driven core** (`shazam-core`) and N thin consumers —
+whole product is **one data-driven core** (`wickra-shazam-core`) and N thin consumers —
 the CLI and the ten language bindings — each of which only ships a
 `FingerprintSpec` plus candles and reads back a match report.
 
@@ -61,7 +61,7 @@ in all ten languages — there is no per-language JSON reformatting to drift.
 
 The indicator registry, the `Candle` type and the O(1) feature implementations
 come from the Wickra ecosystem (`wickra-backtest-core`'s registry over the
-`wickra` indicator library); `shazam-core` adds only the spec model, the rolling
+`wickra` indicator library); `wickra-shazam-core` adds only the spec model, the rolling
 fingerprint fold, the normalization / metric layers and the k-nearest search.
 
 ## See also

@@ -5,9 +5,9 @@
 //! The fixtures are blessed via the CLI (see `golden/README.md`); this test is
 //! the Rust half of the cross-language golden contract.
 
-use shazam_core::{build_index, match_index, Candle, FingerprintSpec};
 use std::fs;
 use std::path::{Path, PathBuf};
+use wickra_shazam_core::{build_index, match_index, Candle, FingerprintSpec};
 
 const K: usize = 5;
 

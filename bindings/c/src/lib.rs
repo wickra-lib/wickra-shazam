@@ -26,7 +26,7 @@ use core::ffi::{c_char, CStr};
 use std::panic::{catch_unwind, AssertUnwindSafe};
 use std::ptr;
 
-use shazam_core::Shazam;
+use wickra_shazam_core::Shazam;
 
 /// A required pointer argument (`handle` or `cmd_json`) was null.
 pub const WICKRA_SHAZAM_ERR_NULL: i32 = -1;
