@@ -7,9 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **The core crate carried a name the release could not upload.**
+  `shazam-core` is outside the org's crates.io token scope, which
+  creates new crates under the `wickra-` prefix only; `cargo publish` on it
+  returns 403 at upload while `--dry-run` passes, and because the publish jobs
+  run in parallel the release would have landed on PyPI, npm, NuGet, Maven
+  Central and the Go mirror without ever reaching crates.io. The core is now
+  `wickra-shazam-core`, the shape of every released sibling. The
+  directory keeps its name; only the package and the
+  `wickra_shazam_core` path moved. The same audit ran across the family
+  (xray paid for this with its first tag).
+
 ### Added
 
-- `shazam-core`: the deterministic fingerprint engine — a serde `FingerprintSpec`
+- `wickra-shazam-core`: the deterministic fingerprint engine — a serde `FingerprintSpec`
   (an ordered feature list of `indicator` / `price` / `microstructure` axes plus
   `window`, `normalize` and `metric`) folded over an asset's history into a rolling
   index of fixed-dimension fingerprints, with `match_current` finding the `k`

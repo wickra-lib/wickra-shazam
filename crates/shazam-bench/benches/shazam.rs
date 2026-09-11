@@ -9,7 +9,7 @@
 use std::hint::black_box;
 
 use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion, Throughput};
-use shazam_core::{build_index, match_index, Candle, FingerprintSpec};
+use wickra_shazam_core::{build_index, match_index, Candle, FingerprintSpec};
 
 const INDICATORS: [&str; 6] = ["Rsi", "Roc", "Sma", "Ema", "Atr", "Mfi"];
 

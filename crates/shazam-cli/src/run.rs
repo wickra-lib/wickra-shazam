@@ -2,10 +2,10 @@
 //! and render the report.
 
 use crate::args::{Args, Format};
-use shazam_core::{build_index, match_index, Candle, Config, FingerprintSpec, MatchReport};
 use std::fmt::Write as _;
 use std::fs;
 use std::path::Path;
+use wickra_shazam_core::{build_index, match_index, Candle, Config, FingerprintSpec, MatchReport};
 
 /// Load the inputs, run the match and return the rendered output.
 pub fn run(args: &Args) -> Result<String, String> {

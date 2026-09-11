@@ -50,7 +50,7 @@ not price alone**.
   index, `match_current(index, current, k)` finds the `k` most similar historical
   fingerprints, and a label attaches a human name (`"may_2021_crash"`) to a match.
 
-The core is one library ([`shazam-core`](crates/shazam-core)), usable from
+The core is one library ([`wickra-shazam-core`](crates/shazam-core)), usable from
 **Rust, Python, Node.js, WASM, C, C++, C#, Go, Java and R** over a
 JSON-over-C-ABI boundary, plus a reference CLI.
 

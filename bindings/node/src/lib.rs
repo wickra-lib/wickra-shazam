@@ -12,7 +12,7 @@
 use napi::Result;
 use napi_derive::napi;
 
-use shazam_core::Shazam as CoreShazam;
+use wickra_shazam_core::Shazam as CoreShazam;
 
 /// Build a napi error from a message.
 fn err(message: impl Into<String>) -> napi::Error {

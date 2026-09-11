@@ -1,7 +1,7 @@
 //! The `wickra-shazam` reference CLI.
 //!
 //! Loads a `FingerprintSpec` and an asset's history from CSV, builds a
-//! fingerprint index through `shazam-core`, matches the current state against
+//! fingerprint index through `wickra-shazam-core`, matches the current state against
 //! it, and prints the top matches as text or JSON.
 
 mod args;

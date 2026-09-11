@@ -1,5 +1,5 @@
 # Wickra Shazam — workspace.
-# "Shazam for markets", built as one data-driven core (`shazam-core`): a serde
+# "Shazam for markets", built as one data-driven core (`wickra-shazam-core`): a serde
 # fingerprint spec (FingerprintSpec) turns an asset's full history into a rolling
 # index of fixed-dimension microstructure fingerprints, and matches the current
 # fingerprint against that entire history to name the regime ("that's the
@@ -47,7 +47,7 @@ wickra-exchange = { git = "https://github.com/wickra-lib/wickra-exchange", versi
 # alongside `git` so it is not a wildcard (cargo-deny bans.wildcards).
 wickra-backtest-core = { git = "https://github.com/wickra-lib/wickra-backtest", version = "0.1" }
 # Workspace-internal crate, referenced by the CLI, bench and bindings.
-shazam-core = { version = "0.1.0", path = "crates/shazam-core" }
+wickra-shazam-core = { version = "0.1.0", path = "crates/shazam-core" }
 # Serialization — the data-driven boundary (spec/command/report as JSON).
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"

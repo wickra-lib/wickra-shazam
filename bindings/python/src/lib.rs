@@ -12,7 +12,7 @@
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 
-use shazam_core::Shazam;
+use wickra_shazam_core::Shazam;
 
 /// A shazam instance driven by JSON commands.
 ///

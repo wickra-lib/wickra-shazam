@@ -2,7 +2,7 @@
 //! snapshots, and the structural validation boundaries (unknown feature/field,
 //! dimension over `MAX_DIM`).
 
-use shazam_core::{
+use wickra_shazam_core::{
     build_index, Candle, Error, Feature, FingerprintSpec, Metric, Normalize, PriceField,
 };
 

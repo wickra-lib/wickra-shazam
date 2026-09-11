@@ -5,7 +5,7 @@
 //! cargo run -p wickra-shazam-example
 //! ```
 
-use shazam_core::{build_index, match_index, Candle, FingerprintSpec};
+use wickra_shazam_core::{build_index, match_index, Candle, FingerprintSpec};
 
 const SPEC: &str = r#"{
     "features": [{"kind": "price", "field": "close"}],
@@ -33,7 +33,7 @@ fn main() {
     let current = vec![candle(4, 102.0)];
     let report = match_index(&index, &current, 2).expect("match");
 
-    println!("wickra-shazam {}", shazam_core::version());
+    println!("wickra-shazam {}", wickra_shazam_core::version());
     println!(
         "{}",
         serde_json::to_string(&report).expect("serialize report")

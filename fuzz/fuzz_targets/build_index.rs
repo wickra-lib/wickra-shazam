@@ -6,7 +6,7 @@
 
 use libfuzzer_sys::fuzz_target;
 use serde::Deserialize;
-use shazam_core::{build_index, Candle, FingerprintSpec};
+use wickra_shazam_core::{build_index, Candle, FingerprintSpec};
 
 #[derive(Deserialize)]
 struct Input {

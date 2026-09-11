@@ -25,7 +25,7 @@ Every change runs green locally before a commit:
 ```bash
 cargo fmt --all
 cargo test --workspace --all-features
-cargo test -p shazam-core --no-default-features   # sequential path == parallel path
+cargo test -p wickra-shazam-core --no-default-features   # sequential path == parallel path
 cargo clippy --workspace --all-targets --all-features -- -D warnings
 cargo deny check
 ```

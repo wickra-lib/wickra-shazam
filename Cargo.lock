@@ -2077,24 +2077,7 @@ name = "shazam-bench"
 version = "0.1.0"
 dependencies = [
  "criterion",
- "shazam-core",
-]
-
-[[package]]
-name = "shazam-core"
-version = "0.1.0"
-dependencies = [
- "proptest",
- "rayon",
- "rust_decimal",
- "serde",
- "serde_json",
- "thiserror",
- "toml",
- "wickra-backtest-core",
- "wickra-core",
- "wickra-data",
- "wickra-exchange",
+ "wickra-shazam-core",
 ]
 
 [[package]]
@@ -2771,14 +2754,31 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "serde_json",
- "shazam-core",
+ "wickra-shazam-core",
 ]
 
 [[package]]
 name = "wickra-shazam-c"
 version = "0.1.0"
 dependencies = [
- "shazam-core",
+ "wickra-shazam-core",
+]
+
+[[package]]
+name = "wickra-shazam-core"
+version = "0.1.0"
+dependencies = [
+ "proptest",
+ "rayon",
+ "rust_decimal",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "toml",
+ "wickra-backtest-core",
+ "wickra-core",
+ "wickra-data",
+ "wickra-exchange",
 ]
 
 [[package]]
@@ -2786,7 +2786,7 @@ name = "wickra-shazam-example"
 version = "0.1.0"
 dependencies = [
  "serde_json",
- "shazam-core",
+ "wickra-shazam-core",
 ]
 
 [[package]]
@@ -2796,7 +2796,7 @@ dependencies = [
  "napi",
  "napi-build",
  "napi-derive",
- "shazam-core",
+ "wickra-shazam-core",
 ]
 
 [[package]]
@@ -2804,15 +2804,15 @@ name = "wickra-shazam-python"
 version = "0.1.0"
 dependencies = [
  "pyo3",
- "shazam-core",
+ "wickra-shazam-core",
 ]
 
 [[package]]
 name = "wickra-shazam-wasm"
 version = "0.1.0"
 dependencies = [
- "shazam-core",
  "wasm-bindgen",
+ "wickra-shazam-core",
 ]
 
 [[package]]

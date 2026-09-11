@@ -38,4 +38,4 @@ cast_possible_wrap = "allow"
 similar_names = "allow"
 
 [dependencies]
-shazam-core = { workspace = true }
+wickra-shazam-core = { workspace = true }

@@ -12,7 +12,7 @@
 
 use wasm_bindgen::prelude::*;
 
-use shazam_core::Shazam as CoreShazam;
+use wickra_shazam_core::Shazam as CoreShazam;
 
 /// A shazam instance driven by JSON commands.
 #[wasm_bindgen]
