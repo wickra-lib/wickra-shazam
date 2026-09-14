@@ -13,4 +13,5 @@ Encoding: UTF-8
 NeedsCompilation: yes
 SystemRequirements: the wickra-shazam C ABI shared library (WKSHZM_LIB) and its
     header (WKSHZM_INC).
-RoxygenNote: 7.3.2
+Depends: R (>= 4.1)
+Config/roxygen2/version: 8.0.0
