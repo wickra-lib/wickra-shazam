@@ -955,7 +955,11 @@ jobs:
             if Version() == "" {
               t.Fatal("Version() returned an empty string")
             }
-            h := New()
+            // The smallest spec the core accepts; the constructor parses it.
+            h, err := New(`{"features":[{"kind":"price","field":"close"}],"window":1,"metric":"euclid"}`)
+            if err != nil {
+              t.Fatalf("New: %v", err)
+            }
             defer h.Close()
             out, err := h.Command(`{"cmd":"version"}`)
             if err != nil {
