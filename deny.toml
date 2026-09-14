@@ -38,7 +38,4 @@ wildcards = "deny"
 unknown-registry = "deny"
 unknown-git = "deny"
 
-# The exchange facade is consumed as a git dependency until its first crates.io
-# release; it lives under the project's own GitHub org.
-[sources.allow-org]
-github = ["wickra-lib"]
+# Every dependency comes from crates.io; no git source is allowed.

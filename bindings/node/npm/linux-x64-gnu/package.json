@@ -4,7 +4,9 @@
   "description": "Native binding for wickra-shazam (Linux x64 GNU). Installed automatically as an optional dependency of wickra-shazam on matching platforms.",
   "main": "wickra-shazam.linux-x64-gnu.node",
   "files": [
-    "wickra-shazam.linux-x64-gnu.node"
+    "wickra-shazam.linux-x64-gnu.node",
+    "LICENSE-MIT",
+    "LICENSE-APACHE"
   ],
   "license": "MIT OR Apache-2.0",
   "engines": {

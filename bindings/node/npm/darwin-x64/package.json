@@ -4,7 +4,9 @@
   "description": "Native binding for wickra-shazam (macOS x64). Installed automatically as an optional dependency of wickra-shazam on matching platforms.",
   "main": "wickra-shazam.darwin-x64.node",
   "files": [
-    "wickra-shazam.darwin-x64.node"
+    "wickra-shazam.darwin-x64.node",
+    "LICENSE-MIT",
+    "LICENSE-APACHE"
   ],
   "license": "MIT OR Apache-2.0",
   "engines": {

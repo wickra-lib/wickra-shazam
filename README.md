@@ -54,13 +54,23 @@ The core is one library ([`wickra-shazam-core`](crates/shazam-core)), usable fro
 **Rust, Python, Node.js, WASM, C, C++, C#, Go, Java and R** over a
 JSON-over-C-ABI boundary, plus a reference CLI.
 
+```bash
+# Index a history and match the current state, human-readable table:
+cargo run -p wickra-shazam -- --spec golden/specs/crash_setup.json \
+  --history golden/data/history/sym-01.csv --current golden/data/current/sym-01.csv
+
+# Raw MatchReport JSON (the same bytes every binding returns), top 5 matches:
+cargo run -p wickra-shazam -- --spec golden/specs/price_euclid.json \
+  --history golden/data/history/sym-01.csv --k 5 --format json
+```
+
 ## Status
 
-**Pre-release — functionally complete, CI-verified, not yet published.** The core,
-the CLI, all ten language bindings, the byte-exact golden corpus, property + fuzz
-tests, benchmarks and one runnable example per language are in place and green
-across the full CI matrix (10 languages × 3 OS). Not yet released to any
-registry — track progress in [ROADMAP.md](ROADMAP.md).
+Early development (0.1.0). The core, the CLI, all ten language bindings, the
+byte-exact golden corpus, property + fuzz tests, benchmarks and one runnable
+example per language are in place and green across the full CI matrix (10
+languages × 3 OS); 0.1.0 is the first published release. What comes next is in
+[ROADMAP.md](ROADMAP.md).
 
 ## Documentation
 
@@ -176,7 +186,7 @@ fuzz/                  cargo-fuzz targets (spec_parse, build_index, match_index,
 examples/              one runnable "index a history and match the current state" example per language
 ```
 
-## Building from source
+## Building everything from source
 
 ```bash
 cargo build --workspace
@@ -187,11 +197,46 @@ cargo run -p wickra-shazam -- --spec golden/specs/crash_setup.json \
   --history golden/data/history/sym-01.csv
 ```
 
+Each binding builds from its own directory — see the per-binding READMEs under
+`bindings/`.
+
+## Testing
+
+Run the suites with the commands in
+[Building everything from source](#building-everything-from-source).
+
+- **`wickra-shazam-core`** — unit tests per feature axis, normalisation and
+  metric, the index and search path, the parallel-versus-sequential parity,
+  property tests over histories and the command envelope, and the
+  operating-mode check (a label sent before `index` and one sent after yield
+  the same `match` report; re-indexing keeps it). The golden fixtures in
+  `golden/` are the anchor: the same `(spec, history, current)` triple must
+  match to the same report bytes here as in every binding.
+- **Every binding** asserts the *same* golden bytes and the same operating-mode
+  equivalence. That is the whole cross-language claim, so it is checked the
+  same way in each one rather than approximated per language: Python with
+  pytest (and a plain runner on 3.9), Node with `node --test`, WASM through
+  the nodejs build, C and C++ through `ctest`, C# with `dotnet test`, Go with
+  `go test`, Java with JUnit, and R with the shipped `tests/smoke.R` plus the
+  repository's `run_tests.R`.
+- **Examples** — every example under `examples/` runs in CI and is held to the
+  version and the matches it prints.
+- **Fuzz** — `fuzz/` holds libFuzzer targets over spec parsing, metric
+  normalisation, the index build and the match; CI runs each for a short
+  smoke.
+
 ## Requirements
 
-- **Rust** ≥ 1.86 (workspace MSRV; the Node binding needs ≥ 1.88).
-- Binding toolchains as needed: Node ≥ 22, Python ≥ 3.9, a C toolchain, .NET 8,
-  JDK 22+, Go 1.23, R — see each `bindings/<lang>/README.md`.
+- **Rust 1.86+** — the workspace MSRV; the Node binding needs **Rust 1.88**.
+- **Python 3.9+** — the Python binding.
+- **Node 22+** — the Node binding.
+- **Go 1.23+** — the Go binding.
+- **Java 22+** — the Java binding.
+- **R 4.1+** — the R package.
+- **.NET 8+** — the C# binding.
+- A **C11 / C++17** compiler with CMake 3.15+ for the C and C++ examples.
+
+See each `bindings/<lang>/README.md` for the per-language build and install.
 
 ## Benchmarks
 
