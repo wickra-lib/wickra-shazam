@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>wickra-shazam WASM — match the current state</title>
+  <style>
+    body { font-family: ui-sans-serif, system-ui, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; color: #1d1d1d; }
+    h1 { margin-bottom: .25rem; }
+    .meta { color: #666; margin-top: 0; }
+    table { border-collapse: collapse; width: 100%; margin-top: 1rem; font-variant-numeric: tabular-nums; }
+    th, td { border: 1px solid #ddd; padding: .5rem .75rem; text-align: right; }
+    th:first-child, td:first-child { text-align: left; }
+    th { background: #fafafa; }
+    code { background: #f4f4f4; padding: .1rem .25rem; border-radius: .2rem; font-size: .9em; }
+    pre { background: #f6f8fa; padding: .75rem; border-radius: .3rem; overflow-x: auto; }
+    button { padding: .5rem 1rem; }
+    #status { margin-top: 1rem; color: #666; }
+  </style>
+</head>
+<body>
+  <h1>wickra-shazam WASM — match the current state</h1>
+  <p class="meta">
+    The same example every other language carries: index a short history,
+    label the window the current state resembles, and match. The report is
+    data, not code, so the bytes here are the same bytes the CLI and every
+    other binding return for these candles — and the label lands the same
+    whether it was sent before or after the index was built.
+  </p>
+
+  <p><button id="go" disabled>Index and match</button></p>
+  <p id="status">Loading WASM module…</p>
+
+  <table id="matches" hidden>
+    <thead><tr><th>ts</th><th>Similarity</th><th>Label</th></tr></thead>
+    <tbody></tbody>
+  </table>
+
+  <pre id="raw" hidden></pre>
+
+  <script type="module">
+    import init, { Shazam, version }
+      from "../../bindings/wasm/pkg/wickra_shazam_wasm.js";
+
+    const SPEC = JSON.stringify({
+      features: [{ kind: "price", field: "close" }],
+      window: 1,
+      metric: "euclid",
+    });
+
+    const candle = (time, close) => ({ time, open: close, high: close, low: close, close, volume: 1.0 });
+    const INDEX = JSON.stringify({ cmd: "index", history: [candle(1, 100.0), candle(2, 101.0), candle(3, 102.0)] });
+    const LABEL = JSON.stringify({ cmd: "label", ts: 3, label: "top_of_range" });
+    const MATCH = JSON.stringify({ cmd: "match", current: [candle(4, 102.0)], k: 2 });
+
+    const status = document.getElementById("status");
+    const go = document.getElementById("go");
+
+    function run() {
+      // Index, then label the window the current state will match. A fresh
+      // shazam per run, so clicking twice does not index on top of old state.
+      const after = new Shazam(SPEC);
+      after.command(INDEX);
+      after.command(LABEL);
+      const labelledAfter = after.command(MATCH);
+
+      // The same label declared before the index exists: kept on the handle
+      // and applied when the index is built.
+      const before = new Shazam(SPEC);
+      before.command(LABEL);
+      before.command(INDEX);
+      const labelledBefore = before.command(MATCH);
+      if (labelledBefore !== labelledAfter) {
+        throw new Error("a label before index differs from a label after index");
+      }
+
+      const report = JSON.parse(labelledAfter);
+      const body = document.querySelector("#matches tbody");
+      body.replaceChildren();
+      for (const match of report.matches) {
+        const tr = document.createElement("tr");
+        const cells = [match.ts, match.similarity, match.label ?? "—"];
+        for (const cell of cells) {
+          const td = document.createElement("td");
+          td.textContent = String(cell);
+          tr.append(td);
+        }
+        body.append(tr);
+      }
+      document.getElementById("matches").hidden = false;
+
+      const raw = document.getElementById("raw");
+      raw.textContent = JSON.stringify(report, null, 2);
+      raw.hidden = false;
+
+      status.textContent =
+        `${report.matches.length} match(es) over ${report.indexed} indexed window(s), label before equals label after — wickra-shazam ${version()}.`;
+    }
+
+    await init();
+    status.textContent = `Module ready — wickra-shazam ${version()}.`;
+    go.disabled = false;
+    go.addEventListener("click", () => {
+      try {
+        run();
+      } catch (err) {
+        status.textContent = `Error: ${err}`;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,11 +1,19 @@
-// A minimal C++ example: index a history and match the current state through the
-// wickra-shazam C ABI.
-#include <cstddef>
-#include <iostream>
+// A minimal C++ example: index a history, label a window, match the current
+// state -- and show that the label lands the same whether it was sent before
+// or after the index was built -- all through the C++ hull.
+//
+// This goes through `wickra_shazam.hpp`, the C++ hull shipped beside the C
+// header, because that hull is what a C++ caller is meant to use: it owns and
+// frees the handle, runs the two-call length protocol behind
+// `wickra_shazam_command` for you -- the core carries the produced-but-
+// undelivered response between the two calls, so a mutating `index` runs once,
+// not twice -- and turns a refusal into an exception rather than a negative
+// integer that is easy to ignore. Calling the C functions directly from C++
+// works too, but then the hull would be shipped without anything building it.
+#include <cstdio>
 #include <string>
-#include <vector>
 
-#include "wickra_shazam.h"
+#include "wickra_shazam.hpp"
 
 namespace {
 const char *SPEC =
@@ -18,45 +26,42 @@ const char *INDEX =
     R"({"time":2,"open":101,"high":101,"low":101,"close":101,"volume":1},)"
     R"({"time":3,"open":102,"high":102,"low":102,"close":102,"volume":1}]})";
 
+const char *LABEL = R"({"cmd":"label","ts":3,"label":"top_of_range"})";
+
 const char *MATCH =
     R"({"cmd":"match","current":[)"
     R"({"time":4,"open":102,"high":102,"low":102,"close":102,"volume":1}],)"
     R"("k":2})";
-
-// Run a command with the length-out protocol; returns the response, or an empty
-// optional on error.
-bool run(WickraShazam *shazam, const char *cmd, std::string &out) {
-    int len = wickra_shazam_command(shazam, cmd, nullptr, 0);
-    if (len < 0) {
-        return false;
-    }
-    std::vector<char> buf(static_cast<std::size_t>(len) + 1);
-    wickra_shazam_command(shazam, cmd, buf.data(),
-                          static_cast<std::size_t>(buf.size()));
-    out.assign(buf.data());
-    return true;
-}
 }  // namespace
 
 int main() {
-    WickraShazam *shazam = wickra_shazam_new(SPEC);
-    if (shazam == nullptr) {
-        std::cerr << "failed to build shazam\n";
+    try {
+        std::printf("wickra-shazam %s\n", wickra::Shazam::version().c_str());
+
+        // Index, then label the window the current state will match.
+        wickra::Shazam after(SPEC);
+        after.command(INDEX);
+        after.command(LABEL);
+        const std::string labelled_after = after.command(MATCH);
+        std::printf("matches: %s\n", labelled_after.c_str());
+
+        // The same label declared before the index exists: kept on the handle
+        // and applied when the index is built.
+        wickra::Shazam before(SPEC);
+        before.command(LABEL);
+        before.command(INDEX);
+        const std::string labelled_before = before.command(MATCH);
+
+        // Both orders yield the same report.
+        if (labelled_before != labelled_after) {
+            std::fprintf(stderr, "a label before index differs from a label after index\n");
+            return 1;
+        }
+    } catch (const wickra::ShazamError &err) {
+        // Every failure arrives here: a spec the core rejects, a command it does
+        // not understand, a call that returned a negative code.
+        std::fprintf(stderr, "%s\n", err.what());
         return 1;
     }
-
-    std::string indexed;
-    std::string report;
-    if (!run(shazam, INDEX, indexed) || !run(shazam, MATCH, report)) {
-        std::cerr << "command failed\n";
-        wickra_shazam_free(shazam);
-        return 1;
-    }
-
-    std::cout << "wickra-shazam " << wickra_shazam_version() << "\n";
-    std::cout << "indexed: " << indexed << "\n";
-    std::cout << "match: " << report << "\n";
-
-    wickra_shazam_free(shazam);
     return 0;
 }

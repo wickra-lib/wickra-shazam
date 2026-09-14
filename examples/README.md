@@ -17,6 +17,7 @@ to load (the golden fixtures live in [`../golden/`](../golden)).
 | .NET | [`csharp/Match/`](csharp/Match/) | `dotnet run --project examples/csharp/Match` |
 | Java | [`java/Match.java`](java/Match.java) | see the header comment |
 | R | [`r/match.R`](r/match.R) | `Rscript examples/r/match.R` |
+| WASM | [`wasm/`](wasm/) | `wasm-pack build bindings/wasm --target web`, serve the repository root, open `examples/wasm/match.html` |
 
 The native bindings (Python, Node.js) load their own compiled library. The
 bindings that go through the C ABI (Go, .NET, Java, R, and the C/C++ example
@@ -28,7 +29,11 @@ cargo build --release -p wickra-shazam-c
 
 ## C / C++
 
-The C and C++ examples build with CMake and run under ctest:
+The C example calls the four ABI functions directly; the C++ example goes
+through `bindings/c/include/wickra_shazam.hpp`, the header-only hull that owns
+the handle and runs the length-out protocol. `golden_test.c` asserts golden
+parity and operating-mode equivalence over the whole corpus. All three build
+with CMake and run under ctest:
 
 ```bash
 cargo build --release -p wickra-shazam-c

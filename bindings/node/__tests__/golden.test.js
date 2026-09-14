@@ -39,12 +39,9 @@ function candlesJson(csvPath) {
   return `[${out.join(",")}]`;
 }
 
-test("golden index+match are byte-identical", (t) => {
+test("golden index+match are byte-identical", () => {
   const golden = findGolden();
-  if (!golden) {
-    t.skip("golden fixtures not present yet");
-    return;
-  }
+  assert.ok(golden, "golden corpus not found");
   const history = candlesJson(path.join(golden, "data/history/sym-01.csv"));
   const current = candlesJson(path.join(golden, "data/current/sym-01.csv"));
   const specDir = path.join(golden, "specs");

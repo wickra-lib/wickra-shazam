@@ -62,8 +62,10 @@ pub fn dtw_similarity(a: &[&[f64]], b: &[&[f64]], band: usize) -> f64 {
     for i in 0..n {
         let lo = i.saturating_sub(band);
         let hi = (i + band + 1).min(m);
-        for j in lo..hi {
-            let cost = euclid_dist(a[i], b[j]);
+        // `j` also indexes the DP table, so the band's window over `b` is
+        // enumerated rather than ranged: the same cells, in the same order.
+        for (j, b_j) in b.iter().enumerate().take(hi).skip(lo) {
+            let cost = euclid_dist(a[i], b_j);
             let prev = if i == 0 && j == 0 {
                 0.0
             } else {

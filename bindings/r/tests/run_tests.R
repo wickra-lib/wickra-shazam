@@ -46,7 +46,8 @@ stopifnot(grepl('"ok":false', inband, fixed = TRUE))
 ## cross-language golden parity: index sym-01's history, match its current
 ## window with k=5, and assert the response is byte-identical to
 ## golden/expected/<spec>.json. Candle JSON is built from the raw CSV tokens so
-## no per-language number formatting can drift.
+## no per-language number formatting can drift. A missing corpus is a failure,
+## not a skip.
 golden_dir <- function() {
   d <- normalizePath(getwd(), mustWork = FALSE)
   for (i in seq_len(8)) {
@@ -75,21 +76,56 @@ candles_json <- function(path) {
 }
 
 g <- golden_dir()
-if (!is.null(g)) {
-  history <- candles_json(file.path(g, "data/history/sym-01.csv"))
-  current <- candles_json(file.path(g, "data/current/sym-01.csv"))
-  for (spec_path in list.files(file.path(g, "specs"), pattern = "\\.json$", full.names = TRUE)) {
-    name <- basename(spec_path)
-    spec_json <- paste(readLines(spec_path, warn = FALSE), collapse = "\n")
-    expected <- trimws(paste(
-      readLines(file.path(g, "expected", name), warn = FALSE), collapse = "\n"
-    ))
-    gsh <- wkshzm_new(spec_json)
-    wkshzm_command(gsh, paste0('{"cmd":"index","history":', history, "}"))
-    got <- wkshzm_command(gsh, paste0('{"cmd":"match","current":', current, ',"k":5}'))
-    stopifnot(identical(trimws(got), expected))
-  }
-  cat("wickra-shazam golden parity passed\n")
+stopifnot(!is.null(g))
+history <- candles_json(file.path(g, "data/history/sym-01.csv"))
+current <- candles_json(file.path(g, "data/current/sym-01.csv"))
+index_cmd <- paste0('{"cmd":"index","history":', history, "}")
+match_cmd <- paste0('{"cmd":"match","current":', current, ',"k":5}')
+for (spec_path in list.files(file.path(g, "specs"), pattern = "\\.json$", full.names = TRUE)) {
+  name <- basename(spec_path)
+  spec_json <- paste(readLines(spec_path, warn = FALSE), collapse = "\n")
+  expected <- trimws(paste(
+    readLines(file.path(g, "expected", name), warn = FALSE), collapse = "\n"
+  ))
+  gsh <- wkshzm_new(spec_json)
+  wkshzm_command(gsh, index_cmd)
+  got <- wkshzm_command(gsh, match_cmd)
+  stopifnot(identical(trimws(got), expected))
 }
+cat("wickra-shazam golden parity passed\n")
+
+## Operating-mode equivalence over the golden corpus: a label sent before
+## `index` is kept on the handle and applied when the index is built; a label
+## sent after `index` goes onto the live index. Both must yield the same match
+## report, re-indexing keeps it, and the label rides along on the top match. The
+## core pins this in Rust; this checks the boundary the R binding crosses.
+label <- "golden_top"
+for (spec_path in list.files(file.path(g, "specs"), pattern = "\\.json$", full.names = TRUE)) {
+  spec_json <- paste(readLines(spec_path, warn = FALSE), collapse = "\n")
+  plain <- wkshzm_new(spec_json)
+  wkshzm_command(plain, index_cmd)
+  unlabelled <- wkshzm_command(plain, match_cmd)
+  ts <- regmatches(unlabelled, regexpr('"ts":[0-9]+', unlabelled))
+  ts <- sub('"ts":', "", ts, fixed = TRUE)
+  stopifnot(nzchar(ts))
+  label_cmd <- paste0('{"cmd":"label","ts":', ts, ',"label":"', label, '"}')
+
+  before <- wkshzm_new(spec_json)
+  wkshzm_command(before, label_cmd)
+  wkshzm_command(before, index_cmd)
+  labelled_before <- wkshzm_command(before, match_cmd)
+
+  after <- wkshzm_new(spec_json)
+  wkshzm_command(after, index_cmd)
+  wkshzm_command(after, label_cmd)
+  labelled_after <- wkshzm_command(after, match_cmd)
+  stopifnot(identical(labelled_before, labelled_after))
+  stopifnot(grepl(label, labelled_after, fixed = TRUE))
+  stopifnot(!identical(labelled_after, unlabelled))
+
+  wkshzm_command(after, index_cmd)
+  stopifnot(identical(wkshzm_command(after, match_cmd), labelled_after))
+}
+cat("wickra-shazam R operating modes: label before index equals label after\n")
 
 cat("wickra-shazam R tests passed\n")

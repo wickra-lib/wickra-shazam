@@ -26,7 +26,7 @@ func goldenDir(t *testing.T) string {
 		}
 		dir = filepath.Dir(dir)
 	}
-	t.Skip("golden fixtures not present")
+	t.Fatal("golden corpus not found")
 	return ""
 }
 

@@ -15,10 +15,20 @@
 //!    written into `out`.
 //!
 //! Whenever `len < cap` the response is written immediately, so a
-//! sufficiently-large buffer needs only one call. Negative returns are reserved
-//! for unusable arguments ([`WICKRA_SHAZAM_ERR_NULL`],
-//! [`WICKRA_SHAZAM_ERR_UTF8`]) and caught panics ([`WICKRA_SHAZAM_ERR_PANIC`]);
-//! a non-negative return is always the response length. Domain errors (a bad
+//! sufficiently-large buffer needs only one call.
+//!
+//! **Mutating commands and the response cache.** `set_spec`, `index`, `label`
+//! and `reset` change the handle's state, so the two-call idiom must not
+//! execute them twice. Each handle therefore caches the response of the command
+//! it last *computed but not yet delivered* (`pending`). A repeated call with
+//! the same command bytes reuses that cached response instead of re-executing;
+//! once the response is successfully written to a buffer, the cache is cleared
+//! so the next identical command executes freshly. A logical command is thus
+//! executed exactly once, no matter how many buffer-sizing retries it takes.
+//!
+//! Negative returns are reserved for unusable arguments
+//! ([`WICKRA_SHAZAM_ERR_NULL`], [`WICKRA_SHAZAM_ERR_UTF8`]) and caught panics
+//! ([`WICKRA_SHAZAM_ERR_PANIC`]); a non-negative return is always the response length. Domain errors (a bad
 //! spec, an unknown command) are *not* negative — they come back in-band as
 //! `{"ok":false,"error":...}` JSON in the buffer.
 
@@ -37,7 +47,12 @@ pub const WICKRA_SHAZAM_ERR_PANIC: i32 = -3;
 
 /// An opaque handle to a shazam instance. Created by [`wickra_shazam_new`] and
 /// destroyed by [`wickra_shazam_free`]; never dereferenced by the caller.
-pub struct WickraShazam(Shazam);
+pub struct WickraShazam {
+    inner: Shazam,
+    /// The last command computed but not yet delivered: `(cmd_bytes, response)`.
+    /// See the module docs for the mutating-command cache contract.
+    pending: Option<(Vec<u8>, String)>,
+}
 
 /// Read a NUL-terminated C string as `&str`, or `None` on null / bad UTF-8.
 ///
@@ -63,7 +78,10 @@ pub unsafe extern "C" fn wickra_shazam_new(spec_json: *const c_char) -> *mut Wic
         return ptr::null_mut();
     };
     match catch_unwind(AssertUnwindSafe(|| Shazam::new(json))) {
-        Ok(Ok(shazam)) => Box::into_raw(Box::new(WickraShazam(shazam))),
+        Ok(Ok(inner)) => Box::into_raw(Box::new(WickraShazam {
+            inner,
+            pending: None,
+        })),
         _ => ptr::null_mut(),
     }
 }
@@ -87,6 +105,7 @@ pub unsafe extern "C" fn wickra_shazam_free(handle: *mut WickraShazam) {
 /// response and a trailing NUL have been written to `out`; otherwise `out` is
 /// left untouched and the caller should re-call with a `cap` of at least
 /// `len + 1`. Pass `out = NULL`, `cap = 0` to query the length without writing.
+/// A mutating command is executed exactly once across all such retries.
 ///
 /// # Safety
 /// `handle` must be a valid handle; `cmd_json` a valid NUL-terminated C string;
@@ -104,27 +123,45 @@ pub unsafe extern "C" fn wickra_shazam_command(
     let Some(cmd) = (unsafe { opt_str(cmd_json) }) else {
         return WICKRA_SHAZAM_ERR_UTF8;
     };
-    let shazam = unsafe { &mut (*handle).0 };
-    let response = match catch_unwind(AssertUnwindSafe(|| shazam.command_json(cmd))) {
-        // `command_json` folds domain errors into `{"ok":false,...}` JSON, so a
-        // top-level `Err` should not occur; surface it in-band all the same
-        // rather than inventing a new negative code.
-        Ok(result) => result.unwrap_or_else(|err| {
-            format!(
-                "{{\"ok\":false,\"error\":{}}}",
-                json_string(&err.to_string())
-            )
-        }),
-        Err(_) => return WICKRA_SHAZAM_ERR_PANIC,
-    };
+    let shazam = unsafe { &mut *handle };
 
-    let bytes = response.as_bytes();
-    let len = bytes.len();
-    if len < cap && !out.is_null() {
-        unsafe {
-            ptr::copy_nonoverlapping(bytes.as_ptr(), out.cast::<u8>(), len);
-            *out.add(len) = 0;
+    // Reuse the cached response for an identical, not-yet-delivered command;
+    // otherwise execute once and cache the result.
+    let is_retry =
+        matches!(&shazam.pending, Some((bytes, _)) if bytes.as_slice() == cmd.as_bytes());
+    if !is_retry {
+        let response = match catch_unwind(AssertUnwindSafe(|| shazam.inner.command_json(cmd))) {
+            // `command_json` folds domain errors into `{"ok":false,...}` JSON, so
+            // a top-level `Err` should not occur; surface it in-band all the same
+            // rather than inventing a new negative code.
+            Ok(result) => result.unwrap_or_else(|err| {
+                format!(
+                    "{{\"ok\":false,\"error\":{}}}",
+                    json_string(&err.to_string())
+                )
+            }),
+            Err(_) => return WICKRA_SHAZAM_ERR_PANIC,
+        };
+        shazam.pending = Some((cmd.as_bytes().to_vec(), response));
+    }
+
+    let (len, delivered) = {
+        let response = &shazam.pending.as_ref().expect("pending set above").1;
+        let bytes = response.as_bytes();
+        let len = bytes.len();
+        let delivered = len < cap && !out.is_null();
+        if delivered {
+            unsafe {
+                ptr::copy_nonoverlapping(bytes.as_ptr(), out.cast::<u8>(), len);
+                *out.add(len) = 0;
+            }
         }
+        (len, delivered)
+    };
+    // The response has been delivered: clear the cache so the next identical
+    // command executes freshly.
+    if delivered {
+        shazam.pending = None;
     }
     i32::try_from(len).unwrap_or(i32::MAX)
 }
@@ -170,6 +207,54 @@ mod tests {
     fn read_buf(buf: &[u8]) -> String {
         let cstr = CStr::from_bytes_until_nul(buf).unwrap();
         cstr.to_str().unwrap().to_string()
+    }
+
+    /// The response cache: buffer-sizing retries of a mutating command
+    /// execute it once. Two length-only calls and one delivering call of the
+    /// same `index` are one execution, the delivered bytes are the ones the
+    /// length described, and once delivered the cache is clear -- a following
+    /// `match` against the built index answers.
+    #[test]
+    fn buffer_retry_executes_a_mutating_command_once() {
+        let spec = CString::new(SPEC).unwrap();
+        let handle = unsafe { wickra_shazam_new(spec.as_ptr()) };
+        assert!(!handle.is_null());
+        let index = CString::new(
+            r#"{"cmd":"index","history":[{"time":1,"open":1.0,"high":1.0,"low":1.0,"close":1.0,"volume":1.0},{"time":2,"open":2.0,"high":2.0,"low":2.0,"close":2.0,"volume":1.0},{"time":3,"open":3.0,"high":3.0,"low":3.0,"close":3.0,"volume":1.0}]}"#,
+        )
+        .unwrap();
+        let a = unsafe { wickra_shazam_command(handle, index.as_ptr(), ptr::null_mut(), 0) };
+        let b = unsafe { wickra_shazam_command(handle, index.as_ptr(), ptr::null_mut(), 0) };
+        assert!(a > 0);
+        assert_eq!(a, b);
+        let mut buf = vec![0u8; usize::try_from(a).unwrap() + 1];
+        let c = unsafe {
+            wickra_shazam_command(
+                handle,
+                index.as_ptr(),
+                buf.as_mut_ptr().cast::<c_char>(),
+                buf.len(),
+            )
+        };
+        assert_eq!(c, a);
+        assert!(read_buf(&buf).contains("\"indexed\""));
+
+        let query = CString::new(
+            r#"{"cmd":"match","current":[{"time":4,"open":2.0,"high":2.0,"low":2.0,"close":2.0,"volume":1.0}],"k":1}"#,
+        )
+        .unwrap();
+        let mut out = vec![0u8; 8192];
+        let n = unsafe {
+            wickra_shazam_command(
+                handle,
+                query.as_ptr(),
+                out.as_mut_ptr().cast::<c_char>(),
+                out.len(),
+            )
+        };
+        assert!(n > 0);
+        assert!(read_buf(&out).contains("\"matches\""));
+        unsafe { wickra_shazam_free(handle) };
     }
 
     #[test]
