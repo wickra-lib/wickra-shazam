@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
  * formatting (or locale) can drift.
  */
 class GoldenTest {
-    private static Path goldenDir() {
+    static Path goldenDir() {
         Path dir = Paths.get("").toAbsolutePath();
         for (int i = 0; i < 8; i++) {
             Path g = dir.resolve("golden");
@@ -35,7 +35,7 @@ class GoldenTest {
         return null;
     }
 
-    private static String candlesJson(Path path) throws IOException {
+    static String candlesJson(Path path) throws IOException {
         List<String> rows = new ArrayList<>();
         for (String raw : Files.readAllLines(path, StandardCharsets.UTF_8)) {
             String line = raw.trim();

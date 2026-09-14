@@ -1,5 +1,9 @@
 "use strict";
 
+// Tests over the wasm-pack (nodejs target) output, run by the WASM job after
+// `wasm-pack build --target nodejs --out-dir pkg-node`. The require is hard: a
+// missing build must fail the job, not skip it.
+//
 // Cross-language golden parity: build the shazam from each committed
 // `golden/specs/*.json`, index `sym-01`'s history, match its current window with
 // k=5, and assert the response equals `golden/expected/<spec>.json` byte-for-byte.
@@ -11,18 +15,11 @@ const { test } = require("node:test");
 const assert = require("node:assert");
 const fs = require("node:fs");
 const path = require("node:path");
-const { Shazam } = require("../index.js");
+const { Shazam } = require("../pkg-node/wickra_shazam_wasm.js");
 
 function findGolden() {
-  let dir = __dirname;
-  for (let i = 0; i < 8; i++) {
-    const g = path.join(dir, "golden");
-    if (fs.existsSync(path.join(g, "specs"))) {
-      return g;
-    }
-    dir = path.dirname(dir);
-  }
-  return null;
+  const g = path.resolve(__dirname, "..", "..", "..", "golden");
+  return fs.existsSync(path.join(g, "specs")) ? g : null;
 }
 
 function candlesJson(csvPath) {

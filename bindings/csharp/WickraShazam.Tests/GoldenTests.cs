@@ -10,7 +10,7 @@ namespace WickraShazam.Tests;
 // formatting (or locale) can drift.
 public class GoldenTests
 {
-    private static string? FindGolden()
+    internal static string? FindGolden()
     {
         string dir = AppContext.BaseDirectory;
         for (int i = 0; i < 12; i++)
@@ -30,7 +30,7 @@ public class GoldenTests
         return null;
     }
 
-    private static string CandlesJson(string path)
+    internal static string CandlesJson(string path)
     {
         var sb = new StringBuilder("[");
         bool first = true;
