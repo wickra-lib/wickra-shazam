@@ -75,7 +75,7 @@ index(history = data/history/sym-01.csv)
 match(current = data/current/sym-01.csv, k = 5)
 ```
 
-## Bless (regenerate)
+## Blessing
 
 `expected/*.json` is the core's compact `MatchReport` JSON, byte-for-byte. To
 re-bless from the CLI:
