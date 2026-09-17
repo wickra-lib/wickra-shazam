@@ -41,7 +41,7 @@ This emits `pkg/` with the `.wasm` module and JS glue.
 ## Quick start
 
 ```js
-import init, { Shazam, version } from "./pkg/wickra_shazam_wasm.js";
+import init, { Shazam, version } from "wickra-shazam-wasm";
 
 await init();
 
