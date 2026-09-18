@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-09-18
+
 ### Fixed
 
 - **The Java binding loads the library it ships.** The jar carries the native
@@ -21,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Family pins follow the owners' releases:** wickra-backtest-core =0.1.6 -> =0.1.7, wickra-exchange =0.1.5 -> =0.1.6. No code of this repository changes; the engine it links is the one those releases ship.
 - **Every README follows wickra's shape.** A cross-repo scan compared the
   heading skeleton of each README against wickra's and this repository's
   differed throughout. The root README opens as wickra's does (banner, badges,
@@ -169,5 +172,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (`deny.toml`, `osv-scanner.toml`, `lychee.toml`), lint configuration
   (`clippy.toml`), `repo-metadata.toml`, and dual `MIT OR Apache-2.0` licensing.
 
-[Unreleased]: https://github.com/wickra-lib/wickra-shazam/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/wickra-lib/wickra-shazam/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/wickra-lib/wickra-shazam/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/wickra-lib/wickra-shazam/releases/tag/v0.1.0
