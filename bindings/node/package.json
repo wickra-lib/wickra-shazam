@@ -47,12 +47,12 @@
     "node": ">= 22"
   },
   "optionalDependencies": {
-    "wickra-shazam-linux-x64-gnu": "0.1.1",
-    "wickra-shazam-linux-arm64-gnu": "0.1.1",
-    "wickra-shazam-darwin-x64": "0.1.1",
     "wickra-shazam-darwin-arm64": "0.1.1",
-    "wickra-shazam-win32-x64-msvc": "0.1.1",
-    "wickra-shazam-win32-arm64-msvc": "0.1.1"
+    "wickra-shazam-darwin-x64": "0.1.1",
+    "wickra-shazam-linux-arm64-gnu": "0.1.1",
+    "wickra-shazam-linux-x64-gnu": "0.1.1",
+    "wickra-shazam-win32-arm64-msvc": "0.1.1",
+    "wickra-shazam-win32-x64-msvc": "0.1.1"
   },
   "scripts": {
     "build": "napi build --platform --release",
@@ -62,6 +62,6 @@
     "test": "node --test"
   },
   "devDependencies": {
-    "@napi-rs/cli": "^3.9.0"
+    "@napi-rs/cli": "^3.10.4"
   }
 }
