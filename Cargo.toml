@@ -41,8 +41,8 @@ categories = ["finance", "command-line-utilities"]
 # follow their released 1.0 line.
 wickra-core = "1.0"
 wickra-data = "1.0"
-wickra-exchange = "=0.1.6"
-wickra-backtest-core = "=0.1.7"
+wickra-exchange = "=0.1.7"
+wickra-backtest-core = "=0.1.8"
 # Workspace-internal crate, referenced by the CLI, bench and bindings.
 wickra-shazam-core = { version = "0.1.2", path = "crates/shazam-core" }
 # Serialization — the data-driven boundary (spec/command/report as JSON).
