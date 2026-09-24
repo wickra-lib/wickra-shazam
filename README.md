@@ -66,7 +66,7 @@ cargo run -p wickra-shazam -- --spec golden/specs/price_euclid.json \
 
 ## Status
 
-**0.1.2 — the current release.** The core, the CLI, all ten language bindings,
+**0.1.3 — the current release.** The core, the CLI, all ten language bindings,
 the byte-exact golden corpus, property + fuzz tests, benchmarks and one runnable
 example per language are in place and green across the full CI matrix (10
 languages × 3 OS); What comes next is in [ROADMAP.md](ROADMAP.md).
