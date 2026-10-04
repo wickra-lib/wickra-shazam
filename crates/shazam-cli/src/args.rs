@@ -60,7 +60,7 @@ mod tests {
         assert_eq!(args.k, 5);
         assert_eq!(args.format, Format::Text);
         assert!(args.current.is_none());
-        assert!(args.label.is_empty());
+        assert_eq!(args.label, Vec::<String>::new());
     }
 
     #[test]
