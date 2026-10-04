@@ -146,7 +146,7 @@ mod tests {
     fn none_normalize_leaves_axes_empty() {
         let history: Vec<Candle> = (0..3).map(|i| candle(i, i as f64)).collect();
         let index = build_index(&history, &spec(1, Normalize::None)).unwrap();
-        assert!(index.axes.is_empty());
+        assert_eq!(index.axes, Vec::new());
     }
 
     #[test]
