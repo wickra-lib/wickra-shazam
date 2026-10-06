@@ -20,7 +20,7 @@ members = ["crates/shazam-core", "crates/shazam-cli", "bindings/c", "bindings/py
 exclude = ["fuzz"]
 
 [workspace.package]
-version = "0.1.4"
+version = "0.2.0"
 edition = "2021"
 rust-version = "1.86"
 license = "MIT OR Apache-2.0"
@@ -39,12 +39,12 @@ categories = ["finance", "command-line-utilities"]
 # exactly, as the released siblings pin them: a newer patch on one side must
 # not leave two copies of the engine in one graph. wickra-core and wickra-data
 # follow their released 1.0 line.
-wickra-core = "1.0"
-wickra-data = "1.0"
-wickra-exchange = "=0.1.8"
-wickra-backtest-core = "=0.1.9"
+wickra-core = "2.0"
+wickra-data = "2.0"
+wickra-exchange = "=0.2.0"
+wickra-backtest-core = "=0.2.0"
 # Workspace-internal crate, referenced by the CLI, bench and bindings.
-wickra-shazam-core = { version = "0.1.4", path = "crates/shazam-core" }
+wickra-shazam-core = { version = "0.2.0", path = "crates/shazam-core" }
 # Serialization — the data-driven boundary (spec/command/report as JSON).
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
