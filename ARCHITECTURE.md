@@ -4,7 +4,7 @@
 is a piece of **data** — a serde `FingerprintSpec` (an ordered feature list, a
 window, a normalization and a distance metric) — that is rolled over an asset's
 whole history with the [Wickra](https://github.com/wickra-lib/wickra) feature
-space (514 O(1) streaming indicators plus price and microstructure). Because the
+space (495 O(1) streaming indicators plus price and microstructure). Because the
 fingerprint is data, not code, indexing and matching run natively, across the
 C ABI and in WASM, byte-for-byte identical.
 
@@ -72,7 +72,7 @@ z-score at zero std → 0).
 
 No indicator mathematics lives in this repository. Each `Feature::Indicator` axis
 resolves from the `wickra-core` registry by name and parameters (the same
-resolver the backtester uses), so shazam inherits all 514 indicators and any
+resolver the backtester uses), so shazam inherits all 495 indicators and any
 future additions for free. `Feature::Price` reads straight from the candle, and
 `Feature::Microstructure` reads order-book imbalance, funding, open interest,
 liquidations and footprint from the same core.
