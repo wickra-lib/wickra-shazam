@@ -4,7 +4,7 @@ title: "wickra-shazam"
 abstract: >-
   "Shazam for markets" built on the Wickra core: an asset's full history is
   folded into a rolling index of fixed-dimension microstructure fingerprints (a
-  data-driven FingerprintSpec over 514 O(1) indicators plus price and
+  data-driven FingerprintSpec over 495 O(1) indicators plus price and
   microstructure), and the current fingerprint is matched against that entire
   history to name the regime, exposed as a JSON-over-C-ABI data API in ten
   languages.

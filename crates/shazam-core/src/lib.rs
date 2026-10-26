@@ -1,7 +1,7 @@
 //! Data-driven core of Wickra Shazam — "Shazam for markets".
 //!
 //! A serde [`FingerprintSpec`] is rolled over an asset's whole history with the
-//! [Wickra](https://github.com/wickra-lib/wickra) feature space (514 O(1)
+//! [Wickra](https://github.com/wickra-lib/wickra) feature space (495 O(1)
 //! streaming indicators plus price and microstructure) into a
 //! [`FingerprintIndex`] of fixed-dimension fingerprints, and the current
 //! fingerprint is matched against that index to name the regime. Indexing is
