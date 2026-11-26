@@ -49,7 +49,8 @@ impl PyShazam {
 
 /// The native module (`wickra_shazam._wickra_shazam`).
 #[pymodule]
-fn _wickra_shazam(module: &Bound<'_, PyModule>) -> PyResult<()> {
+#[pyo3(name = "_wickra_shazam")]
+fn wickra_shazam_extension(module: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add("__version__", env!("CARGO_PKG_VERSION"))?;
     module.add_class::<PyShazam>()?;
     Ok(())
