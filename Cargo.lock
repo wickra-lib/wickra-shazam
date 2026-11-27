@@ -2100,7 +2100,7 @@ dependencies = [
 
 [[package]]
 name = "shazam-bench"
-version = "0.2.2"
+version = "0.2.3"
 dependencies = [
  "codspeed-criterion-compat",
  "wickra-shazam-core",
@@ -2771,7 +2771,7 @@ dependencies = [
 
 [[package]]
 name = "wickra-shazam"
-version = "0.2.2"
+version = "0.2.3"
 dependencies = [
  "clap",
  "serde_json",
@@ -2780,14 +2780,14 @@ dependencies = [
 
 [[package]]
 name = "wickra-shazam-c"
-version = "0.2.2"
+version = "0.2.3"
 dependencies = [
  "wickra-shazam-core",
 ]
 
 [[package]]
 name = "wickra-shazam-core"
-version = "0.2.2"
+version = "0.2.3"
 dependencies = [
  "proptest",
  "rayon",
@@ -2804,7 +2804,7 @@ dependencies = [
 
 [[package]]
 name = "wickra-shazam-example"
-version = "0.2.2"
+version = "0.2.3"
 dependencies = [
  "serde_json",
  "wickra-shazam-core",
@@ -2812,7 +2812,7 @@ dependencies = [
 
 [[package]]
 name = "wickra-shazam-node"
-version = "0.2.2"
+version = "0.2.3"
 dependencies = [
  "napi",
  "napi-build",
@@ -2822,7 +2822,7 @@ dependencies = [
 
 [[package]]
 name = "wickra-shazam-python"
-version = "0.2.2"
+version = "0.2.3"
 dependencies = [
  "pyo3",
  "wickra-shazam-core",
@@ -2830,7 +2830,7 @@ dependencies = [
 
 [[package]]
 name = "wickra-shazam-wasm"
-version = "0.2.2"
+version = "0.2.3"
 dependencies = [
  "wasm-bindgen",
  "wickra-shazam-core",
